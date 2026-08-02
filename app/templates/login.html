@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login — WorkPulse</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="auth-body">
+  <div class="auth-card">
+    <h1 class="auth-title">WorkPulse</h1>
+    <p class="auth-subtitle">Log in to your dashboard</p>
+
+    {% if error %}
+      <div class="auth-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" action="/login">
+      <label>Email</label>
+      <input type="email" name="email" value="{{ email or '' }}" required autofocus>
+
+      <label>Password</label>
+      <input type="password" name="password" required>
+
+      <button type="submit" class="btn-primary">Log In</button>
+    </form>
+
+    <p class="auth-footer">Don't have an account? <a href="/register">Register here</a></p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Register — WorkPulse</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="auth-body">
+  <div class="auth-card">
+    <h1 class="auth-title">WorkPulse</h1>
+    <p class="auth-subtitle">Create your account</p>
+
+    {% if error %}
+      <div class="auth-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" action="/register">
+      <label>Full Name</label>
+      <input type="text" name="name" value="{{ name or '' }}" required autofocus>
+
+      <label>Email</label>
+      <input type="email" name="email" value="{{ email or '' }}" required>
+
+      <label>Department</label>
+      <input type="text" name="department" value="{{ department or 'General' }}">
+
+      <label>Password</label>
+      <input type="password" name="password" required minlength="6">
+
+      <label>Confirm Password</label>
+      <input type="password" name="confirm_password" required minlength="6">
+
+      <button type="submit" class="btn-primary">Create Account</button>
+    </form>
+
+    <p class="auth-footer">Already have an account? <a href="/login">Log in here</a></p>
+  </div>
+</body>
+</html>

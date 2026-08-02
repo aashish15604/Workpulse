@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WorkPulse Dashboard</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <div class="topnav">
+      <div>
+        <h1>WorkPulse</h1>
+        <p class="subtitle">Automated task scheduling & real-time metrics dashboard</p>
+      </div>
+      <div class="nav-links">
+        <a href="/" class="active">Dashboard</a>
+        <a href="/tasks">Tasks</a>
+        <span class="nav-user">{{ employee.name }} <a href="/logout">Log out</a></span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="cards" id="overview-cards"></section>
+
+    <section>
+      <h2>Employee Status</h2>
+      <table id="employeeTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Assigned</th>
+            <th>Completed</th>
+            <th>Overdue</th>
+            <th>Completion Rate</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="/static/dashboard.js"></script>
+</body>
+</html>

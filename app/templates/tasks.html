@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tasks — WorkPulse</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <div class="topnav">
+      <div>
+        <h1>WorkPulse</h1>
+        <p class="subtitle">Task list</p>
+      </div>
+      <div class="nav-links">
+        <a href="/">Dashboard</a>
+        <a href="/tasks" class="active">Tasks</a>
+        <span class="nav-user">{{ employee.name }} <a href="/logout">Log out</a></span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="create-task-box">
+      <h2>Create Task</h2>
+      <form id="createTaskForm">
+        <input type="text" name="title" placeholder="Task title" required>
+        <select name="employee_id" required>
+          {% for emp in employees %}
+            <option value="{{ emp.id }}">{{ emp.name }}</option>
+          {% endfor %}
+        </select>
+        <select name="priority">
+          <option value="low">Low</option>
+          <option value="medium" selected>Medium</option>
+          <option value="high">High</option>
+        </select>
+        <input type="datetime-local" name="due_date" required>
+        <button type="submit" class="btn-primary" style="width:auto; margin-top:0;">Add Task</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>All Tasks</h2>
+      <table id="taskTable">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Assigned To</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Due Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    const employeeNames = {
+      {% for emp in employees %}"{{ emp.id }}": "{{ emp.name }}",{% endfor %}
+    };
+
+    function renderActionButtons(task) {
+      if (task.status === "completed") return "—";
+      if (task.status === "pending") {
+        return `<button class="btn-small" onclick="updateStatus(${task.id}, 'in_progress')">Start</button>`;
+      }
+      return `<button class="btn-small" onclick="updateStatus(${task.id}, 'completed')">Complete</button>`;
+    }
+
+    async function updateStatus(taskId, newStatus) {
+      await fetch(`/api/tasks/${taskId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      loadTasks();
+    }
+
+    async function loadTasks() {
+      const res = await fetch("/api/tasks/");
+      const tasks = await res.json();
+      const rows = tasks.map(t => `
+        <tr>
+          <td>${t.title}</td>
+          <td>${employeeNames[t.employee_id] || "-"}</td>
+          <td>${t.priority}</td>
+          <td><span class="status-pill status-${t.status}">${t.status.replace("_"," ")}</span></td>
+          <td>${new Date(t.due_date).toLocaleString()}</td>
+          <td>${renderActionButtons(t)}</td>
+        </tr>`).join("");
+      document.querySelector("#taskTable tbody").innerHTML =
+        rows || `<tr><td colspan="6" style="color:#8b91a0">No tasks yet.</td></tr>`;
+    }
+
+    document.getElementById("createTaskForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = new FormData(e.target);
+      const payload = {
+        title: form.get("title"),
+        employee_id: parseInt(form.get("employee_id")),
+        priority: form.get("priority"),
+        due_date: form.get("due_date"),
+      };
+      const res = await fetch("/api/tasks/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        e.target.reset();
+        loadTasks();
+      } else {
+        alert("Failed to create task. Check all fields are filled.");
+      }
+    });
+
+    loadTasks();
+  </script>
+</body>
+</html>
