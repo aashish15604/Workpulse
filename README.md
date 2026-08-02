@@ -1,8 +1,8 @@
 ﻿# WorkPulse
 
-An automated task scheduling and monitoring system with real-time employee status tracking, a live metrics dashboard, and proactive email notifications.
+A self-monitoring task tracker with automated status updates and email reminders — built to hold yourself accountable to deadlines without manual tracking.
 
-Built to eliminate manual status tracking - a background scheduler continuously monitors tasks, automatically flags overdue work, updates employee status, and emails the assigned employee both a reminder before the deadline and an alert if it's missed.
+Built to eliminate manual status tracking - a background scheduler continuously monitors tasks, automatically flags overdue work, updates work status, and emails the assigned employee both a reminder before the deadline and an alert if it's missed.
 
 ## Features
 
